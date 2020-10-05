@@ -18,5 +18,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     inline: "whoami"
 
   config.vm.provision "shell", path: "script.sh"
+  config.vm.provision "shell", path: "scripts/update.sh"
 
 end
