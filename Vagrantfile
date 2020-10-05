@@ -13,11 +13,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider :lxc do |lxc, override|
     override.vm.box = "visibilityspots/centos-7.x-minimal"
   end
-
-  config.vm.provision "shell",
-    inline: "whoami"
-
-  config.vm.provision "shell", path: "script.sh"
-  config.vm.provision "shell", path: "scripts/update.sh"
-
 end
