@@ -27,3 +27,14 @@ Once it is finished, you should be able to connect to the vagrant environment th
 ```
 Plan van aanpak: Eerst een nomad cluster opstellen. Vervolgens deze cluster laten voldoen aan de voorwaarden in de opdracht. En als laatste stop de VagrantFile configureren zodat dit allemaal (de cluster) gebeurt via vagrant up --provision
 
+
+first step (moet op de 3 vms):
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+sudo yum -y install consul
+
+sudo su -
+service consul start
+exit
+
+
