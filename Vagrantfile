@@ -1,8 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 VAGRANTFILE_API_VERSION = "2"
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-
+Vagrant.configure(2) do |config|
+  config.vm.provision "shell", inline: "echo Hello"
   config.vm.box = "centos/7"
   config.vm.hostname = "nomad"
 
@@ -10,14 +10,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     virtualbox.customize ["modifyvm", :id, "--memory", 2048]
   end
 
-  config.vm.provider :lxc do |lxc, override|
-    override.vm.box = "visibilityspots/centos-7.x-minimal"
+  config.vm.define "web" do |web|
+    web.vm.hostname = "WEB"
+    web.vm.network "private_network", ip: "192.168.1.4", virtualbox__intnet: "mynetwork"
   end
-
-  config.vm.provision "shell",
-    inline: "whoami"
-
-  config.vm.provision "shell", path: "script.sh"
-  config.vm.provision "shell", path: "scripts/update.sh"
 
 end
