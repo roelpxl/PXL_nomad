@@ -25,3 +25,5 @@ Once it is finished, you should be able to connect to the vagrant environment th
     $ vagrant ssh
     [vagrant@nomad ~]$
 ```
+Plan van aanpak: Eerst een nomad cluster opstellen. Vervolgens deze cluster laten voldoen aan de voorwaarden in de opdracht. En als laatste stop de VagrantFile configureren zodat dit allemaal (de cluster) gebeurt via vagrant up --provision
+
