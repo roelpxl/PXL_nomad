@@ -41,6 +41,7 @@ config:
 
 sudo su -
 service consul start
+service docker start
 service nomad start
 exit
 
