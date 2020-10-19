@@ -14,19 +14,22 @@ Vagrant.configure(2) do |config|
     web.vm.hostname = "WEB"
     web.vm.network "private_network", ip: "192.168.1.4", virtualbox__intnet: "mynetwork"
     web.vm.provision "shell", path: "scripts/NomadConsulInstaller.sh"
+    web.vm.provision "shell", path: "scripts/Server.sh"
   end
 
- #config.vm.define "node1" do |node1|
-  #node1.vm.hostname = "NODE1"
-  #node1.vm.network "private_network", ip: "192.168.1.5", virtualbox__internet: "mynetwork"
-  #node1.vm.provision "shell", path: "scripts/NomadConsulInstaller.sh"
-  #end
+  config.vm.define "node1" do |node1|
+   node1.vm.hostname = "NODE1"
+   node1.vm.network "private_network", ip: "192.168.1.5", virtualbox__internet: "mynetwork"
+   node1.vm.provision "shell", path: "scripts/NomadConsulInstaller.sh"
+   node1.vm.provision "shell", path: "scripts/Client1.sh"
+   end
 
- #config.vm.define "node2" do |node2|
-  #node2.vm.hostname = "NODE2"
-  #node2.vm.network "private_network", ip: "192.168.1.6", virtualbox__internet: "mynetwork"
-  #node2.vm.provision "shell", path: "scripts/NomadConsulInstaller.sh"
-  #end
+  config.vm.define "node2" do |node2|
+   node2.vm.hostname = "NODE2"
+   node2.vm.network "private_network", ip: "192.168.1.6", virtualbox__internet: "mynetwork"
+   node2.vm.provision "shell", path: "scripts/NomadConsulInstaller.sh"
+   node2.vm.provision "shell", path: "scripts/Client2.sh"
+   end
 
 
 end
