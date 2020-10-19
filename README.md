@@ -46,6 +46,7 @@ systemctl start consul
 
 echo newfile -> oldfile
 
+-- nomad agent -config /vagrant/scripts/NomadServerConfig
 sudo su -
 service consul start
 service docker start
