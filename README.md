@@ -39,6 +39,13 @@ config:
 /etc/nomad.d/nomad.hcl
 /etc/consul.d/consul.hcl
 
+consul : ook nomad
+bind addres: 192.168.1.4
+server:true
+systemctl start consul
+
+echo newfile -> oldfile
+
 sudo su -
 service consul start
 service docker start
