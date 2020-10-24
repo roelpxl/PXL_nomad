@@ -3,5 +3,5 @@ sudo systemctl start consul
 sudo systemctl start nomad 
 
 consul agent -config-file /vagrant/scripts/ConsulClientConfig.hcl
-nomad agent -config /vagrant/scripts/NomadClientConfig.hcl
+nomad agent -config /vagrant/scripts/NomadClientConfig.hcl &
 
