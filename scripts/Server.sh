@@ -5,7 +5,7 @@ sudo systemctl start nomad
 sudo echo "192.168.1.5 node" | sudo tee -a /etc/hosts
 sudo echo "192.168.1.6 node2" | sudo tee -a /etc/hosts
 
-consul agent -config-file /vagrant/scripts/ConsulServerConfig.hcl > /dev/null 2>&1 & 
-nomad agent -config /vagrant/scripts/NomadServerConfig.hcl > /dev/null 2>&1 & 
+sudo consul agent -config-file /vagrant/scripts/ConsulServerConfig.hcl > /dev/null 2>&1 & 
+sudo nomad agent -config /vagrant/scripts/NomadServerConfig.hcl > /dev/null 2>&1 & 
 
 
