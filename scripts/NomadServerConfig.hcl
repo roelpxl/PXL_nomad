@@ -5,8 +5,3 @@ server {
   enabled = true
   bootstrap_expect = 1
 }
-
-client {
-  enabled = true
-  servers = ["192.168.1.4"]
-}
