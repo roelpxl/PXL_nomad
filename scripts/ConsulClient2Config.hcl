@@ -3,7 +3,7 @@
 # it defaults to "dc1". Consul has first-class support for multiple datacenters, but
 # it relies on proper configuration. Nodes in the same datacenter should be on a
 # single LAN.
-#datacenter = "my-dc-1"
+datacenter = "my-dc-1"
 
 # data_dir
 # This flag provides a data directory for the agent to store state. This is required
@@ -21,7 +21,7 @@ data_dir = "/opt/consul"
 # to, or a go-sockaddr template that can potentially resolve to multiple addresses.
 client_addr = "0.0.0.0"
 bind_addr = "192.168.1.6"
-
+retry_join = ["192.168.1.4"]
 # ui
 # Enables the built-in web UI server and the required HTTP routes. This eliminates
 # the need to maintain the Consul web UI files separately from the binary.
