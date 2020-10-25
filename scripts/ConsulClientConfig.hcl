@@ -2,11 +2,11 @@
 data_dir = "/opt/consul"
 
 bind_addr = "192.168.1.5"
+advertise_addr = "192.168.1.5"
 
 ui = true
 
 server = false
-
 
 retry_join = ["192.168.1.4"]
 
