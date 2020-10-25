@@ -5,3 +5,9 @@ server {
   enabled = true
   bootstrap_expect = 1
 }
+
+advertise{
+  http = "192.168.1.4:4646"
+  rpc = "192.168.1.4:4647"
+  serf = "192.168.1.4:4648"
+}
