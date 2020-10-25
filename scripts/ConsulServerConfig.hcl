@@ -33,7 +33,7 @@ server = true
 # bootstraps the cluster. This allows an initial leader to be elected automatically.
 # This cannot be used in conjunction with the legacy -bootstrap flag. This flag requires
 # -server mode.
-bootstrap_expect=1
+#bootstrap_expect=1
 #retry_join = ["192.168.1.5","192.168.1.6"]
 
 # encrypt
