@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(2) do |config|
-  config.vm.provision "shell", inline: "echo Hello"
+  config.vm.provision "shell", inline: "echo Hello "  
   config.vm.box = "centos/7"
   config.vm.hostname = "nomad"
 
