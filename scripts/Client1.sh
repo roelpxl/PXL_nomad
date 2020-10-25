@@ -2,6 +2,7 @@ sudo systemctl start docker
 sudo systemctl start consul 
 sudo systemctl start nomad 
 
-consul agent -config-file /vagrant/scripts/ConsulClient1Config.hcl
-nomad agent -config /vagrant/scripts/NomadClient1Config.hcl
+sudo echo "192.168.1.4 server" | sudo tee -a /etc/hosts
 
+consul agent -config-file /vagrant/scripts/ConsulClientConfig.hcl /dev/null 2>&1 & 
+nomad agent -config /vagrant/scripts/NomadClientConfig.hcl /dev/null 2>&1 & 

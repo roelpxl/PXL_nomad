@@ -1,17 +1,5 @@
-# datacenter
-# This flag controls the datacenter in which the agent is running. If not provided,
-# it defaults to "dc1". Consul has first-class support for multiple datacenters, but
-# it relies on proper configuration. Nodes in the same datacenter should be on a
-# single LAN.
-#datacenter = "my-dc-1"
+datacenter = "my-dc-1"
 
-# data_dir
-# This flag provides a data directory for the agent to store state. This is required
-# for all agents. The directory should be durable across reboots. This is especially
-# critical for agents that are running in server mode as they must be able to persist
-# cluster state. Additionally, the directory must support the use of filesystem
-# locking, meaning some types of mounted folders (e.g. VirtualBox shared folders) may
-# not be suitable.
 data_dir = "/opt/consul"
 
 # client_addr
@@ -46,6 +34,7 @@ server = true
 # This cannot be used in conjunction with the legacy -bootstrap flag. This flag requires
 # -server mode.
 bootstrap_expect=1
+#retry_join = ["192.168.1.5","192.168.1.6"]
 
 # encrypt
 # Specifies the secret key to use for encryption of Consul network traffic. This key must
