@@ -11,10 +11,10 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define "server" do |server|
-    web.vm.hostname = "server"
-    web.vm.network "private_network", ip: "192.168.1.4", virtualbox__intnet: "mynetwork"
-    web.vm.provision "shell", path: "scripts/NomadConsulInstaller.sh"
-    web.vm.provision "shell", path: "scripts/Server.sh"
+    server.vm.hostname = "server"
+    server.vm.network "private_network", ip: "192.168.1.4", virtualbox__intnet: "mynetwork"
+    server.vm.provision "shell", path: "scripts/NomadConsulInstaller.sh"
+    server.vm.provision "shell", path: "scripts/Server.sh"
   end
   
   config.vm.define "node1" do |node1|
