@@ -4,5 +4,5 @@ sudo systemctl start nomad
 
 sudo echo "192.168.1.4 server" | sudo tee -a /etc/hosts
 
-consul agent -config-file /vagrant/scripts/ConsulClient2Config.hcl /dev/null 2>&1 & 
-nomad agent -config /vagrant/scripts/NomadClient2Config.hcl /dev/null 2>&1 & 
+sudo consul agent -config-file /vagrant/scripts/ConsulClient2Config.hcl /dev/null 2>&1 & 
+sudo nomad agent -config /vagrant/scripts/NomadClient2Config.hcl /dev/null 2>&1 & 
