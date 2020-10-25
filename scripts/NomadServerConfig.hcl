@@ -1,5 +1,5 @@
 data_dir = "/opt/nomad/data"
-bind_addr = "192.168.1.4"
+bind_addr = "192.168.2.4"
 
 server {
   enabled = true
