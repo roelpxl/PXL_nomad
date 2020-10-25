@@ -34,7 +34,7 @@ server = true
 # This cannot be used in conjunction with the legacy -bootstrap flag. This flag requires
 # -server mode.
 bootstrap_expect=1
-retry_join = ["192.168.1.5","192.168.1.6"]
+#retry_join = ["192.168.1.5","192.168.1.6"]
 
 # encrypt
 # Specifies the secret key to use for encryption of Consul network traffic. This key must
