@@ -12,6 +12,8 @@ sudo systemctl start nomad
 #sudo consul agent > /dev/null 2>&1 & 
 sudo nomad agent -server -config  /etc/nomad.d/nomad.hcl -> /dev/null 2>&1 & 
 
+sudo nomad job run /vagrant/scripts/webserver.hcl
+
 #sudo system consul start
 #sudo system nomad start
 
