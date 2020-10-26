@@ -10,7 +10,7 @@ sudo systemctl start consul
 sudo systemctl start nomad 
 
 sudo consul agent > /dev/null 2>&1 & 
-sudo nomad agent > /dev/null 2>&1 & 
+sudo nomad agent -server -config  /etc/nomad.d/nomad.hcl -> /dev/null 2>&1 & 
 
 #sudo system consul start
 #sudo system nomad start
