@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "server" do |server|
     server.vm.hostname = "server"
-    server.vm.network "private_network", ip: "192.168.2.4", virtualbox__intnet: "mynetwork"
+    server.vm.network "private_network", ip: "192.168.2.4", virtualbox__internet: "mynetwork"
     server.vm.provision "shell", path: "scripts/Server.sh"
   end
   
