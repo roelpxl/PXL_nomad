@@ -7,10 +7,10 @@ sudo cat /vagrant/scripts/server/nomad.hcl > /etc/nomad.d/nomad.hcl
 sudo cat /vagrant/scripts/server/consul.hcl > /etc/consul.d/consul.hcl
 
 sudo systemctl start consul 
-#sudo systemctl start nomad 
+sudo systemctl start nomad 
 
 #sudo consul agent > /dev/null 2>&1 & 
-sudo nomad agent -server -config  /etc/nomad.d/nomad.hcl -> /dev/null 2>&1 & 
+#sudo nomad agent -server -config  /etc/nomad.d/nomad.hcl -> /dev/null 2>&1 & 
 
 sudo nomad job run /vagrant/scripts/webserver.hcl
 
