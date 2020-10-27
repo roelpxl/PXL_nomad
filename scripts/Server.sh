@@ -1,8 +1,6 @@
 sudo echo "192.168.2.5 node" | sudo tee -a /etc/hosts
 sudo echo "192.168.2.6 node2" | sudo tee -a /etc/hosts
 
-sudo systemctl start docker
-
 sudo cat /vagrant/scripts/server/nomad.hcl > /etc/nomad.d/nomad.hcl
 sudo cat /vagrant/scripts/server/consul.hcl > /etc/consul.d/consul.hcl
 
