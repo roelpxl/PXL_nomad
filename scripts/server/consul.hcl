@@ -10,4 +10,3 @@ ui = true
 server = true
 
 bootstrap_expect=1
-retry_join = ["192.168.1.5","192.168.1.6"]
