@@ -1,5 +1,4 @@
 job "webserver" {
-  datacenters = ["dc1"]
   type = "service"
 
   group "webserver" {
