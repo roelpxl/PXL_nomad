@@ -1,6 +1,6 @@
 job "webserver" {
   type = "service"
-
+  datacenter = ["dc1"]
   group "webserver" {
 
     task "webserver" {
