@@ -1,5 +1,5 @@
 ---
-- name: restart crond
+- name: start docker-ce
   service:
-    name: crond
-    state: restarted
+    name: docker.service
+    state: started

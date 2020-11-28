@@ -1,6 +1,6 @@
 ---
-- name: playbook for server vm
-  hosts: servers
+- name: playbook for client vm
+  hosts: clients
   become: yes
 
   roles:

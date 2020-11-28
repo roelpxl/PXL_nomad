@@ -1,26 +1,13 @@
 ---
-- name: install cronie
+- name: add docker-ce repository
+  yum_repository:
+    name: docker-ce
+    description: add docker-ce repositor
+    baseurl: https://download.docker.com/linux/centos/$releasever/$basesearch/stable
+    gpgkey: https://download.docker.com/linux/centos/gpg
+
+- name: install docker-ce
   yum:
-    name: cronie
-    state: installed
-  notify: restart crond
-
-- debug:
-    msg: The variable resolved to {{ crond__content }}
-
-- name: add hello script
-  template:
-    src: hello.sh.j2
-    dest: /usr/local/bin/hello.sh
-    owner: "root"
-    group: "root"
-    mode: 0755
-  notify: restart crond
-
-- name: configure hello cron
-  cron:
-    name: hourly hello
-    user: root
-    special_time: hourly
-    job: "/usr/local/bin/hello.sh"
-    state: absent
+    name: docker-ce
+    state: present
+  notify: start docker-ce
