@@ -1,0 +1,27 @@
+---
+- name: Install epel
+  yum:
+    name: epel-release
+    state: installed
+
+- name: Hashicorp repo
+  yum_repository:
+    name: hashicorp
+    description: hashicorp repository
+    baseurl: https://rpm.releases.hashicorp.com/RHEL/$releaserver/$basearch/stable
+    gpgcheck: yes
+    gpgkey: https://rpm.releases.hashicorp.com/gpg
+
+- name: Install nomad
+  yum:
+    name: nomad
+    state: installed
+    notify: restart nomad
+    #
+    #HIER MOET NOG DE CONFIGURATIE FILE VAN NOMAD CLIENT EN SERVER 
+    #
+- name: Enable Nomad service on boot
+  service:
+    name: "nomad_enabled"
+    state: started
+    enabled: yes

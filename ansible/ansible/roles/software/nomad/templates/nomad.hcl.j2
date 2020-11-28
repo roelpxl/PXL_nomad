@@ -1,0 +1,24 @@
+#!/bin/bash
+# {{ ansible_managed }}
+# {{ ansible_default_ipv4.address }}
+# {{ ansible_eth1.ipv4.address }}
+
+data_dir = "/opt/nomad"
+bind_addr = "{{ ansible_eth1.ipv4.address }}"
+nomad_bootstrap_expect = 1 
+nomad_bind_addr_server = 192.168.2.4
+
+{% if ansible_eth1.ipv4.address == {{nomad_bind_addr_server}} %}
+server {
+	enabled = true
+	bootstrap_expect = "{{ nomad_bootstrap_expect}}"
+}
+
+{% else %}
+
+client {
+	enabled = true
+	servers =[" {{nomad_bind_addr_server}}"]
+	network_interface = "eth1"
+}
+{% endif %}
