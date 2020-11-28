@@ -7,33 +7,31 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define :server do |server|
     server.vm.hostname = "server"
-    server.vm.network "private_network", ip: "10.0.0.10"
+    server.vm.network "private_network", ip: "192.168.2.4", virtualbox_intnet:  "mynetwork" 
 
     server.vm.provision "ansible" do |ansible|
       ansible.config_file = "ansible/ansible.cfg"
       ansible.playbook = "ansible/plays/server.yml"
       ansible.groups = {
         "servers" => ["server"],
-#        "servers:vars" => {"crond__content" => "servers_value"}
+        "clients" => ["node1", "node2"]
+#       "servers:vars" => {"crond__content" => "servers_value"}
       }
       ansible.host_vars = {
 #        "server" => {"crond__content" => "server_value"}
       }
-#      ansible.verbose = '-vvv'
+      ansible.verbose = '-vvv'
     end
+  end
 
-
-config.vm.define "node1" do |node1|
+  config.vm.define "node1" do |node1|
    node1.vm.hostname = "node1"
    node1.vm.network "private_network", ip: "192.168.2.5", virtualbox__internet: "mynetwork"
-   node1.vm.provision "shell", path: "scripts/Client1.sh"
    end
 
   config.vm.define "node2" do |node2|
    node2.vm.hostname = "node2"
    node2.vm.network "private_network", ip: "192.168.2.6", virtualbox__internet: "mynetwork"
-   node2.vm.provision "shell", path: "scripts/Client2.sh"
    end
 
-end
 end
