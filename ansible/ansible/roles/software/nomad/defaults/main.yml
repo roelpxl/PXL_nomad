@@ -2,6 +2,6 @@
 
 nomad_bootstrap_expect: 1
 nomad_data_dir: /opt/nomad/data
-nomad_bind_addr_server: 192.168.2.4
+nomad_bind_addr_server: 192.168.3.4
 
 

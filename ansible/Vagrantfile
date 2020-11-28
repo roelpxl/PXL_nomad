@@ -16,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
  
   config.vm.define :server do |server|
     server.vm.hostname = "server"
-    server.vm.network "private_network", ip: "192.168.2.4", virtualbox_internet: "mynetwork"
+    server.vm.network "private_network", ip: "192.168.3.4", virtualbox_internet: "mynetwork"
 
     server.vm.provision "ansible_local" do |ansible|
       ansible.config_file = "ansible/ansible.cfg"
