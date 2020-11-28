@@ -34,9 +34,9 @@
     line: node_name = "{{node_name}}"
     insertafter: 'bind_addr'
     create: yes
-  notify: start consul
+  notify: started consl
 
-- name: start consul
+- name: started consul
   service:
     name: consul
     state: started
