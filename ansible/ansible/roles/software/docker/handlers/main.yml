@@ -1,5 +1,5 @@
 ---
-- name: started docker-ce
+- name: started docker
   service:
     name: docker.service
     state: started

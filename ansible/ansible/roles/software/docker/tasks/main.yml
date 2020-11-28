@@ -2,7 +2,7 @@
 - name: add docker-ce repository
   yum_repository:
     name: docker-ce
-    description: add docker-ce repositor
+    description: add docker-ce repository
     baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable
     gpgkey: https://download.docker.com/linux/centos/gpg
 
@@ -10,4 +10,4 @@
   yum:
     name: docker-ce
     state: present
-  notify: started docker-ce
+  notify: started docker
