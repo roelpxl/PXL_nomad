@@ -1,26 +1,13 @@
 ---
-- name: install cronie
+- name: add the repository
+  yum_repository:
+    name: consul
+    description: add consul repository
+    baseurl: https://rpm.releases.hashicorp.com/RHEL/$releasever/$basearch/stable
+    gpgkey: https://rpm.releases.hashicorp.com/gpg
+
+- name: install consul
   yum:
-    name: cronie
-    state: installed
-  notify: restart crond
-
-- debug:
-    msg: The variable resolved to {{ crond__content }}
-
-- name: add hello script
-  template:
-    src: hello.sh.j2
-    dest: /usr/local/bin/hello.sh
-    owner: "root"
-    group: "root"
-    mode: 0755
-  notify: restart crond
-
-- name: configure hello cron
-  cron:
-    name: hourly hello
-    user: root
-    special_time: hourly
-    job: "/usr/local/bin/hello.sh"
-    state: absent
+    name: consul
+    user: present
+    notify: Uncomment server
