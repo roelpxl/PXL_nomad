@@ -1,0 +1,62 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+#  config.vbguest.auto_update = false
+  config.vm.box = "centos/7"
+  
+  config.vm.provider :virtualbox do |virtualbox, override|
+    virtualbox.customize ["modifyvm", :id, "--memory", 2048]
+  end
+  
+  config.vm.provider :lxc do |lxc, override|
+    override.vm.box = "visibilityspots/centos-7.x-minimal"
+  end
+ 
+  config.vm.define :server do |server|
+    server.vm.hostname = "server"
+    server.vm.network "private_network", ip: "192.168.2.4", virtualbox__internet: "mynetwork"
+
+    server.vm.provision "ansible_local" do |ansible|
+      ansible.config_file = "ansible/ansible.cfg"
+      ansible.playbook = "ansible/plays/server.yml"
+      ansible.groups = {
+         "servers" => ["server"],
+#        "clients" => ["node1", "node2"]
+#        "servers:vars" => {"crond__content" => "servers_value"}
+      }
+      ansible.host_vars = {
+#        "server" => {"crond__content" => "server_value"}
+      }
+#      ansible.verbose = '-vvv'
+    end
+  end
+
+ #config.vm.define "node1" do |node1|
+   #node1.vm.hostname = "node1"
+   #node1.vm.network "private_network", ip: "192.168.2.5", virtualbox__internet: "mynetwork"
+   #
+   #node1.vm.provision "ansible_local" do |ansible|
+   #   ansible.config_file = "ansible/ansible.cfg"
+   #   ansible.playbook = "ansible/plays/client.yml"
+   #   ansible.groups = {
+   #     "clients" => ["node1"],
+   #   }
+   #       ansible.host_vars = {}
+   #end       	   
+ #end
+
+ #config.vm.define "node2" do |node2|
+   #node2.vm.hostname = "node2"
+   #node2.vm.network "private_network", ip: "192.168.2.6", virtualbox__internet: "mynetwork"
+   #node2.vm.provision "ansible_local" do |ansible|
+   #   ansible.config_file = "ansible/ansible.cfg"
+   #   ansible.playbook = "ansible/plays/client.yml"
+   #   ansible.groups = {
+   #     "clients" => ["node2"],
+   #   }
+   #       ansible.host_vars = {}
+   #end
+ #end
+end
