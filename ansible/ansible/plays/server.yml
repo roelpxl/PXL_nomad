@@ -1,5 +1,5 @@
 ---
-- name: playbook for server vm
+- name: server vm playbook
   hosts: servers
   become: yes
 

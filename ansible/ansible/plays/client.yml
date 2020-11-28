@@ -1,5 +1,5 @@
 ---
-- name: playbook for client vm
+- name: client vm playbook
   hosts: clients
   become: yes
 
