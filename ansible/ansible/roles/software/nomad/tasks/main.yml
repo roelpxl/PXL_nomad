@@ -8,7 +8,7 @@
   yum_repository:
     name: hashicorp
     description: hashicorp repository
-    baseurl: https://rpm.releases.hashicorp.com/RHEL/$releaserver/$basearch/stable
+    baseurl: https://rpm.releases.hashicorp.com/RHEL/$releasever/$basearch/stable
     gpgcheck: yes
     gpgkey: https://rpm.releases.hashicorp.com/gpg
 
@@ -18,8 +18,4 @@
     state: installed
   notify: change ip
 
-- name: Enable Nomad service on boot
-  service:
-    name: "nomad_enabled"
-    state: started
-    enabled: yes
+
