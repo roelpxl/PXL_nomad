@@ -6,8 +6,6 @@ client_addr = "0.0.0.0"
 ui = true
 server = {{server_enable_disable}}
 bootstrap_expect = {{amount_bootstrap}}
-{% if server_enable_disable != 'true' %}
 retry_join = ["{{server_ip}}"]
-{% endif %}
 bind_addr = "{{bind_addr}}"
 node_name = "{{node_name}}"

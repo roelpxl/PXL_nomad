@@ -16,7 +16,6 @@
   yum:
     name: nomad
     state: installed
-  notify: change ip
 
 - name: nomad config file
   template:
