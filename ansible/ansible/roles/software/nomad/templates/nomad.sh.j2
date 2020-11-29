@@ -2,7 +2,7 @@
 # {{ ansible_managed }}
 
 data_dir = "/opt/nomad/data"
-bind_addr = {{ bind_addr }}
+bind_addr = "{{ bind_addr }}"
 
 server {
   enabled = {{server_enable_disable}}
