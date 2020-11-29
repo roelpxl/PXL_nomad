@@ -29,30 +29,30 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
- #config.vm.define "node1" do |node1|
-   #node1.vm.hostname = "node1"
-   #node1.vm.network "private_network", ip: "192.168.2.5", virtualbox_internet: "mynetwork"
-   #
-   #node1.vm.provision "ansible_local" do |ansible|
-   #   ansible.config_file = "ansible/ansible.cfg"
-   #   ansible.playbook = "ansible/plays/client.yml"
-   #   ansible.groups = {
-   #     "clients" => ["node1"],
-   #   }
-   #       ansible.host_vars = {}
-   #end       	   
- #end
+ config.vm.define "node1" do |node1|
+   node1.vm.hostname = "node1"
+   node1.vm.network "private_network", ip: "192.168.2.5", virtualbox_internet: "mynetwork"
+   
+   node1.vm.provision "ansible_local" do |ansible|
+      ansible.config_file = "ansible/ansible.cfg"
+      ansible.playbook = "ansible/plays/client.yml"
+      ansible.groups = {
+        "clients" => ["node1"],
+      }
+          ansible.host_vars = {}
+   end       	   
+ end
 
- #config.vm.define "node2" do |node2|
-   #node2.vm.hostname = "node2"
-   #node2.vm.network "private_network", ip: "192.168.2.6", virtualbox_internet: "mynetwork"
-   #node2.vm.provision "ansible_local" do |ansible|
-   #   ansible.config_file = "ansible/ansible.cfg"
-   #   ansible.playbook = "ansible/plays/client.yml"
-   #   ansible.groups = {
-   #     "clients" => ["node2"],
-   #   }
-   #       ansible.host_vars = {}
-   #end
- #end
+ config.vm.define "node2" do |node2|
+   node2.vm.hostname = "node2"
+   node2.vm.network "private_network", ip: "192.168.2.6", virtualbox_internet: "mynetwork"
+   node2.vm.provision "ansible_local" do |ansible|
+      ansible.config_file = "ansible/ansible.cfg"
+      ansible.playbook = "ansible/plays/client.yml"
+      ansible.groups = {
+        "clients" => ["node2"],
+      }
+          ansible.host_vars = {}
+   end
+ end
 end

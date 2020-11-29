@@ -2,12 +2,15 @@
 # {{ ansible_managed }}
 
 data_dir = "/opt/consul"
+
+bind_addr = "{{bind_addr}}"
+
 client_addr = "0.0.0.0"
 ui = true
 server = {{server_enable_disable}}
-bootstrap_expect = {{amount_bootstrap}}
 {% if server_enable_disable != 'true' %}
 retry_join = ["{{server_ip}}"]
+{% else %}
+bootstrap_expect = {{amount_bootstrap}}
 {% endif %}
-bind_addr = "{{bind_addr}}"
-node_name = "{{node_name}}"
+#node_name = "{{node_name}}"
