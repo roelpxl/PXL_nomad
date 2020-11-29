@@ -16,10 +16,8 @@
   yum:
     name: nomad
     state: installed
-  notify: restart nomad
-    #
-    #HIER MOET NOG DE CONFIGURATIE FILE VAN NOMAD CLIENT EN SERVER 
-    #
+  notify: change ip
+
 - name: Enable Nomad service on boot
   service:
     name: "nomad_enabled"

@@ -1,4 +1,26 @@
 ---
+
+- name: change ip
+  lineinfile: 
+    path: /etc/nomad.d/nomad.hcl
+    regexp: '0.0.0.0'
+    line: bind_addr = "{{bind_addr}}"
+  notify: change server state
+
+- name: change server state
+  lineinfile: 
+    path: /etc/nomad.d/nomad.hcl
+    regexp: '?enabled = true'
+    line: enabled = {{server_enabled_disable}}
+  notify: change client state
+
+- name: change client state
+  lineinfile: 
+    path: /etc/nomad.d/nomad.hcl
+    regexp: '127.0.0.1'
+    line: servers = {{server_ip}}
+  notify: restart nomad
+
 - name: restart nomad
   service: 
     name: nomad
