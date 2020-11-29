@@ -25,7 +25,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
          "servers" => ["server"],
       }
       ansible.host_vars = {
-         "servers" => ["server"],
       }
     end
   end

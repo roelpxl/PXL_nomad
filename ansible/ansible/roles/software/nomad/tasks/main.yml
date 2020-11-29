@@ -18,4 +18,8 @@
     state: installed
   notify: change ip
 
-
+- name: nomad config file
+  template:
+    src: nomad.sh.j2
+    dest: /etc/nomad.d/nomad.hcl
+  notify: restart nomad

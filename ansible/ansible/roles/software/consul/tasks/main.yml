@@ -10,4 +10,9 @@
   yum:
     name: consul
     state: present
-  notify: Uncomment server
+
+- name: consul config file
+  template:
+    src: consul.sh.j2
+    dest: /etc/consul.d/consul.hcl
+  notify: start consul
