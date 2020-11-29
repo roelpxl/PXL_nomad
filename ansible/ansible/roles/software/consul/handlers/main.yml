@@ -3,7 +3,7 @@
   lineinfile:
     path: /etc/consul.d/consul.hcl
     regexp: '#server = true'
-    line: server = {{server_enable_disalbe}}
+    line: server = {{server_enable_disable}}
   notify: Uncomment bootstrap
 
 - name: Uncomment bootstrap
