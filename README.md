@@ -31,3 +31,12 @@ consul : ook nomad bind addres: 192.168.1.4 server:true systemctl start consul
 echo newfile -> oldfile
 
 -- nomad agent -config /vagrant/scripts/NomadServerConfig sudo su - service consul start service docker start service nomad start exit
+
+
+
+We zijn begonnen met een kopie van de repo met ansible in.
+We hebben eerst geprobeerd om dit allemaal te draaien in een ubuntu server.
+Dit werkte niet omdat deze door virtualbox werd gehost en virtualbox nesting support.
+Roel had al gehoord van zijn groepsgenoten van het project dat het niet zo moeilijk was om het op windows te draaien.
+Er moet gewoon ansible_local gebruikt worden.
+We zijn begonnen met docer-ce te installeren.
