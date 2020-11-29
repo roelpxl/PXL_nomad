@@ -9,5 +9,5 @@
 - name: install consul
   yum:
     name: consul
-    user: present
-    notify: Uncomment server
+    state: present
+  notify: Uncomment server
