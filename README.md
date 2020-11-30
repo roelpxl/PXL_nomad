@@ -76,6 +76,8 @@ Ik ben begonnen met het werken aan de nomad installatie file. Mijn eerste stap w
 nomad manueel een job starten
 
  $ nomad job run -address=http://192.168.3.4:4646 /vagrant/webserver.hcl
+ 
+ ![Image of NomadJob](https://github.com/roelpxl/PXL_nomad/blob/team16/images/nomad%20job.PNG)
 
 ## Problemen: 
 ### Probleem 1:
