@@ -38,7 +38,12 @@ Bij de start van deze opdracht hebben we de hele mappenstructuur overgenomen van
 Voor te beginnen hebben we een aantal service roles aangemaakt voor nomad, consul en docker. Deze service roles hebben we dezelfde structuur gegeven op basis van de service crond. Wanneer dit allemaal was uitgevoerd hadden we de default set-up voor ons en konden we beginnen met aanpassingen te doen aan alle bestanden. Hieronder ziet u een foto van onze mappenstructuur:
 
 ![Image of Files](https://github.com/roelpxl/PXL_nomad/blob/team16/GitFilesTree.png)
-Foto van onze tree, met een korte uitleg per directory wat er in zit
+Foto van onze tree, opdracht 2 zit volledig in de map ansible.
+Binnen de map ansible hebben we onze Vagrantfile en een map genaam ansible.
+Binnen deze map ansible hebben we 2 folders plays en roles.
+We hebben besloten onze group_vars en host_vars folders onder de plays te zetten.
+De rest van de structuur is overgenomen van de https://github.com/visibilityspots/PXL_nomad repo.
+Wij hebben hier natuurlijk de crond folder verander door de consul, docker en nomad folder.
 
 Wij hebben het werk wat verdeeld onderling: Roel heeft de service roles docker en consul voor zijn rekening gehouden en Kobe heeft de service role nomad opgemaakt. We hebben voor elke service role defaults, tasks, templates en handlers geschreven. Hierna hebben onze vagrantfile gemodificeerd, waar we 2 client nodes (+ server node deze staat ook als client) en 1 server node opzetten. Zo konden we service roles controleren en foutcontrole op doen: door vagrant up te doen en te kijken als er eventueel fouten optreden bij het doorlopen van de verschillende stappen. ...
 
