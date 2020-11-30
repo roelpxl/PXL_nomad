@@ -71,7 +71,7 @@ Ik ben begonnen met het werken aan de nomad installatie file. Mijn eerste stap w
 
 ## Resultaat
 
-![Image of Files](https://github.com/roelpxl/PXL_nomad/blob/team16/images/Nomad_GUI.PNG)
+![Image of Clients](https://github.com/roelpxl/PXL_nomad/blob/team16/images/Nomad_GUI.PNG)
 
 nomad manueel een job starten
 
