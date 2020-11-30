@@ -1,8 +1,8 @@
 job "webserver" {
   type = "service"
-  datacenter = ["dc1"]
+  datacenters = ["dc1"]
   group "webserver" {
-
+    count = 3
     task "webserver" {
       driver = "docker"
 
