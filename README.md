@@ -75,7 +75,7 @@ Ik ben begonnen met het werken aan de nomad installatie file. Mijn eerste stap w
 
 nomad manueel een job starten
 
- $ nomad job run -address=http://192.168.3.4:4646 ../scripts/webserver.hcl
+ $ nomad job run -address=http://192.168.3.4:4646 webserver.hcl
 
 ## Problemen: 
 ### Probleem 1:
