@@ -73,6 +73,9 @@ Ik ben begonnen met het werken aan de nomad installatie file. Mijn eerste stap w
 
 ![Image of Files](https://github.com/roelpxl/PXL_nomad/blob/team16/images/Nomad_GUI.PNG)
 
+nomad manueel een job starten
+ $ nomad job run -address=http://192.168.2.15:4646 ../scripts/webserver.hcl
+
 ## Problemen: 
 ### Probleem 1:
 We hebben eerst geprobeerd om dit allemaal te draaien in een ubuntu server omgeving.
