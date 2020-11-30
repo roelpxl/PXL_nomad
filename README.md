@@ -66,11 +66,11 @@ Na verder na te denken moesten we weten of het een server configuratie is of een
 Ik had ook het bootstrap aantal binnen meegenomen (dit is uiteindelijk niet meer nodig).
 Dit staat allemaal in de group_vars. Omdat de node_name uniek is per client/server hebben we deze binnen host_vars mee gegeven.
 
-### Kobe
+### Kobe:
 Ik ben begonnen met het werken aan de nomad installatie file. Mijn eerste stap was sowieso download van de hashicorp repo waar alle nodige installatiebestanden van nomad in staan, ook heb ik epel-release geïnstalleerd(wat uiteindelijk onnodig was). Wanneer ik de repo binnen had gehaald, kon ik eindelijk nomad fatsoenlijk installeren. Deze installatie stappen heb ik doorlopen in de Tasks dir van nomad, hier plaats ik ook de geconfigureerde nomad template in de dir /etc/nomad.d en herstart ik de nomad service. Ik was eerst begonnen met een template(nomad.hcl.j2) te maken, waar ik enkele fouten in had gemaakt. Daardoor waren Roel en ik overgesprongen op het gebruiken van handlers. Maar uiteindelijk was een template gebruiken de betere optie(wij gebruiken deze nu). Nu gebruiken we de handler alleen voor het herstarten van de service nomad. In de template configureer ik de server en de client, hier definieer ik ook het bind adres en de data_dir. 
 
 ## Problemen: 
-#Probleem 1:
+### Probleem 1:
 We hebben eerst geprobeerd om dit allemaal te draaien in een ubuntu server omgeving.
 Dit werkte niet omdat deze door virtualbox werd gehost en virtualbox nesting support.
 
