@@ -37,7 +37,7 @@ Nomad en consul te werken zoals beoogd in de eerste opdracht! Er zal ook deze ke
 Bij de start van deze opdracht hebben we de hele mappenstructuur overgenomen van ansible. 
 Voor te beginnen hebben we een aantal service roles aangemaakt voor nomad, consul en docker. Deze service roles hebben we dezelfde structuur gegeven op basis van de service crond. Wanneer dit allemaal was uitgevoerd hadden we de default set-up voor ons en konden we beginnen met aanpassingen te doen aan alle bestanden. Hieronder ziet u een foto van onze mappenstructuur:
 
-![Image of Files](https://github.com/roelpxl/PXL_nomad/blob/team16/GitFilesTree.png)
+![Image of Files](https://github.com/roelpxl/PXL_nomad/blob/team16/images/GitFilesTree.png)
 
 Opdracht 2 zit volledig in de map ansible.
 Binnen de map ansible hebben we onze Vagrantfile en een map genaamd ansible.
@@ -68,6 +68,10 @@ Dit staat allemaal in de group_vars. Omdat de node_name uniek is per client/serv
 
 ### Kobe:
 Ik ben begonnen met het werken aan de nomad installatie file. Mijn eerste stap was sowieso download van de hashicorp repo waar alle nodige installatiebestanden van nomad in staan, ook heb ik epel-release geïnstalleerd(wat uiteindelijk onnodig was). Wanneer ik de repo binnen had gehaald, kon ik eindelijk nomad fatsoenlijk installeren. Deze installatie stappen heb ik doorlopen in de Tasks dir van nomad, hier plaats ik ook de geconfigureerde nomad template in de dir /etc/nomad.d en herstart ik de nomad service. Ik was eerst begonnen met een template(nomad.hcl.j2) te maken, waar ik enkele fouten in had gemaakt. Daardoor waren Roel en ik overgesprongen op het gebruiken van handlers. Maar uiteindelijk was een template gebruiken de betere optie(wij gebruiken deze nu). Nu gebruiken we de handler alleen voor het herstarten van de service nomad. In de template configureer ik de server en de client, hier definieer ik ook het bind adres en de data_dir. 
+
+## Resultaat
+
+![Image of Files](https://github.com/roelpxl/PXL_nomad/blob/team16/images/Nomad_GUI.PNG)
 
 ## Problemen: 
 ### Probleem 1:
