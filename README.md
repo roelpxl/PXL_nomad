@@ -39,24 +39,43 @@ Voor te beginnen hebben we een aantal service roles aangemaakt voor nomad, consu
 
 Foto van onze tree, met een korte uitleg per directory wat er in zit
 
-Wij hebben het werk wat verdeeld onderling: Roel heeft de service roles docker en consul voor zijn rekening gehouden en Kobe heeft de service role nomad opgemaakt. We hebben voor elke service role defaults, tasks, templates en handlers geschreven. Hierna hebben onze vagrantfile gemodificeerd, waar we 2 client nodes en 1 server node opzetten. Zo konden we service roles controleren en foutcontrole op doen: door vagrant up te doen en te kijken als er eventueel fouten optreden bij het doorlopen van de verschillende stappen. ...
+Wij hebben het werk wat verdeeld onderling: Roel heeft de service roles docker en consul voor zijn rekening gehouden en Kobe heeft de service role nomad opgemaakt. We hebben voor elke service role defaults, tasks, templates en handlers geschreven. Hierna hebben onze vagrantfile gemodificeerd, waar we 2 client nodes (+ server node deze staat ook als client) en 1 server node opzetten. Zo konden we service roles controleren en foutcontrole op doen: door vagrant up te doen en te kijken als er eventueel fouten optreden bij het doorlopen van de verschillende stappen. ...
+
 
 
 first step (moet op de 3 vms): sudo yum install -y yum-utils sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo sudo yum -y install consul sudo yum -y install nomad sudo yum -y install docker
 
 config: /etc/nomad.d/nomad.hcl /etc/consul.d/consul.hcl
 
-consul : ook nomad bind addres: 192.168.1.4 server:true systemctl start consul
+consul & nomad bind addres: 192.168.3.4 server:true systemctl start consul & nomad
 
 echo newfile -> oldfile
 
 -- nomad agent -config /vagrant/scripts/NomadServerConfig sudo su - service consul start service docker start service nomad start exit
 
-
-
-We zijn begonnen met een kopie van de repo met ansible in.
+## Problemen: 
+#Probleem 1:
 We hebben eerst geprobeerd om dit allemaal te draaien in een ubuntu server.
 Dit werkte niet omdat deze door virtualbox werd gehost en virtualbox nesting support.
+
+#Oplossing:
 Roel had al gehoord van zijn groepsgenoten van het project dat het niet zo moeilijk was om het op windows te draaien.
 Er moet gewoon ansible_local gebruikt worden.
-We zijn begonnen met docer-ce te installeren.
+
+#Probleem 2:
+We hebben veel problemen ondervonden bij het editeren van de config files van zowel consul als nomad.
+We hadden allebij een andere oplossing zitten proberen maar we zijn bijde vastgelopen bij onze eigen oplossing.
+Roel heeft eerst gebruik gemaakt van handlers die de file moesten editeren lijn per lijn.
+Kobe heeft geporbeerd een template die de bestaande file moest vervangen.
+
+#Probleem 3:
+Bij zijn fout gelopen maar de handlers leken het meest belovend.
+Bij het uitvoeren van de handlers lijkt het of de group_vars en hosts_vars niet gevonden worden.
+
+#Oplossing 3:
+Het verplaatsen van de group_vars en hosts_vars naar de roles map zorgde ervoor dat deze wel gevonden werden.
+
+#Oplossing 2:
+Na het grondig test van de handlers lijken hier af en toe problemen mee te zijn.
+Het overstappen naar een template was de betere oplossing.
+
