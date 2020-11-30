@@ -55,4 +55,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           ansible.host_vars = {}
    end
  end
+  
+ config.vm.provision "shell", path: "../script.sh"
+  
 end
