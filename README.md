@@ -1,4 +1,3 @@
-Team 16
 Nomad consul
 The aim of this project is to provide a development environment based on consul and nomad to manage container based microservices.
 
@@ -20,6 +19,15 @@ Once it is finished, you should be able to connect to the vagrant environment th
 
     $ vagrant ssh
     [vagrant@nomad ~]$
+    
+Opdracht 2 Documentatie ---> Team 16 
+Opgave:
+
+
+
+
+
+
 Plan van aanpak: Eerst een nomad cluster opstellen. Vervolgens deze cluster laten voldoen aan de voorwaarden in de opdracht. En als laatste stop de VagrantFile configureren zodat dit allemaal (de cluster) gebeurt via vagrant up --provision
 
 first step (moet op de 3 vms): sudo yum install -y yum-utils sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo sudo yum -y install consul sudo yum -y install nomad sudo yum -y install docker
