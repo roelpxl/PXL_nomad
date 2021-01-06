@@ -1,0 +1,5 @@
+---
+- name: Started Nomad
+  service:
+    name: nomad
+    state: started

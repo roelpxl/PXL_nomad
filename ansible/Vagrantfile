@@ -9,11 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider :virtualbox do |virtualbox, override|
     virtualbox.customize ["modifyvm", :id, "--memory", 2048]
   end
-  
-  config.vm.provider :lxc do |lxc, override|
-    override.vm.box = "visibilityspots/centos-7.x-minimal"
-  end
- 
+   
   config.vm.define :server do |server|
     server.vm.hostname = "server"
     server.vm.network "private_network", ip: "192.168.3.4", virtualbox_internet: "mynetwork"
@@ -24,8 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.groups = {
          "servers" => ["server"],
       }
-      ansible.host_vars = {
-      }
+          ansible.host_vars = {}
     end
   end
 

@@ -1,0 +1,5 @@
+---
+- name: Started Consul
+  service:
+    name: consul
+    state: started

@@ -1,0 +1,51 @@
+---
+- name: Create a directory for Prometheus.yml
+  file:
+    path: /opt/prometheus
+    state: directory
+    mode: '0755'
+
+- name: Prometheus.yml template
+  template: 
+    src: prometheus.yml.sh.j2
+    dest: /opt/prometheus/prometheus.yml
+
+- name: Prometheus template
+  template: 
+    src: prometheus.hcl.sh.j2
+    dest: /opt/nomad/prometheus.hcl
+  vars:
+    job_name: prometheus
+    job_image: prom/prometheus:latest
+    job_port: 9090
+  notify: Start prometheus
+
+- name: Grafana template
+  template: 
+    src: jobs.hcl.sh.j2
+    dest: /opt/nomad/grafana.hcl
+  vars:
+    job_name: grafana
+    job_image: grafana/grafana:latest
+    job_port: 3000
+  notify: Start grafana
+
+- name: Alertmanager template
+  template: 
+    src: jobs.hcl.sh.j2
+    dest: /opt/nomad/alertmanager.hcl
+  vars:
+    job_name: alertmanager
+    job_image: prom/alertmanager:latest
+    job_port: 9093
+  notify: Start alertmanager
+
+- name: Nginx template
+  template: 
+    src: jobs.hcl.sh.j2
+    dest: /opt/nomad/nginx.hcl
+  vars:
+    job_name: nginx
+    job_image: nginx:latest
+    job_port: 80
+  notify: Start nginx
