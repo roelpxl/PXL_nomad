@@ -16,3 +16,8 @@
     src: consul.sh.j2
     dest: /etc/consul.d/consul.hcl
   notify: Started Consul
+
+- name: Restart consul
+  service:
+    name: consul
+    state: restarted

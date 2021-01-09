@@ -7,7 +7,7 @@ scrape_configs:
   - job_name: 'nomad_metrics'                 
                                               
     consul_sd_configs:                        
-    - server: '192.168.2.15:8500'             
+    - server: '192.168.3.4:8500'             
       services: ['nomad-client', 'nomad']     
                                               
     relabel_configs:                          
@@ -21,7 +21,7 @@ scrape_configs:
       format: ['prometheus']                  
   - job_name: 'node_exporter'                 
     consul_sd_configs:                        
-      - server: '192.168.2.15:8500'           
+      - server: '192.168.3.4:8500'           
         services: ['nomad-client']            
     relabel_configs:                          
       - source_labels: [__meta_consul_tags]   
