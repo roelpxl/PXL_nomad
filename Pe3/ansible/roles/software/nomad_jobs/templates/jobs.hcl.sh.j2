@@ -22,7 +22,7 @@ job "{{job_name}}" {
 				}
 			}
 		
-{% if prometheus == {{job_name}} %}
+{% if {{job_name}} == 'prometheus' %}
 		volumes = [
           "/opt/prometheus/:/etc/prometheus/"
         ]
@@ -46,6 +46,6 @@ job "{{job_name}}" {
 		}
 
 {% endif %}
-	  }
+	  	}
 	}
 }
