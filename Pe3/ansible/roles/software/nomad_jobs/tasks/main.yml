@@ -12,7 +12,7 @@
 
 - name: Prometheus template
   template: 
-    src: prometheus.hcl.sh.j2
+    src: jobs.hcl.sh.j2
     dest: /opt/nomad/prometheus.hcl
   vars:
     job_name: prometheus
