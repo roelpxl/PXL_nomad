@@ -12,4 +12,4 @@
   shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/prometheus.nomad || exit 0
 
 - name: Start grafana
-  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/grafana.nomad || exit 0
+  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/grafana.hcl || exit 0

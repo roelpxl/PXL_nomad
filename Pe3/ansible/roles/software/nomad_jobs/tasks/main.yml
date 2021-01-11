@@ -18,11 +18,11 @@
     dest: /opt/webserver.nomad
   notify: Start webserver
 
-- name: prometheus job
-  template:
-    src: prometheus.nomad
-    dest: /opt/prometheus.nomad
-  notify: Start prometheus
+#- name: prometheus job
+#  template:
+#    src: prometheus.nomad
+#    dest: /opt/prometheus.nomad
+#  notify: Start prometheus
 
 - name: Grafana template
   template: 
