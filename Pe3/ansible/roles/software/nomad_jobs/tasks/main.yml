@@ -5,6 +5,17 @@
     state: directory
     mode: '0755'
 
+- name: Create a directory for alertmanager rules
+  file:
+    path: /opt/alertmanager
+    state: directory
+    mode: '0755'
+
+- name: alertmanager infrastructure rules template
+  template: 
+    src: infrastructure.hcl.sh.j2
+    dest: /opt/alertmanager/infrastructure.rules
+
 - name: Prometheus.yml template
   template: 
     src: prometheus.yml.sh.j2
@@ -40,12 +51,14 @@
     job_port: 9093
   notify: Start alertmanager
 
-- name: Nginx template
+- name: webserver template
   template: 
-    src: jobs.hcl.sh.j2
-    dest: /opt/nomad/nginx.hcl
-  vars:
-    job_name: nginx
-    job_image: nginx:latest
-    job_port: 80
-  notify: Start nginx
+    src: webserver.hcl.sh.j2
+    dest: /opt/nomad/webserver.hcl
+  notify: Start webserver
+
+- name: webserver template
+  template: 
+    src: rules.yml.sh.j2
+    dest: /opt/prometheus/rules.yml
+  notify: Start webserver

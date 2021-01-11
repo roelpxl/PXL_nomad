@@ -10,23 +10,23 @@ job "{{job_name}}" {
 			static = {{job_port}}
 			}
 		}
-	  task "{{job_name}}" {
-		driver = "docker"
-		config {
-			image = "{{job_image}}"
-			ports = ["{{job_name}}_port"]
-			logging {
-				type = "journald"
-				config {
-					tag = "{{job_name}}"
+		task "{{job_name}}" {
+			driver = "docker"
+			config {
+				image = "{{job_image}}"
+				ports = ["{{job_name}}_port"]
+				logging {
+					type = "journald"
+					config {
+						tag = "{{job_name}}"
+					}
 				}
+			
 			}
-		
+			service {
+				name = "{{job_name}}"
+				tags = ["metrics"]		
+			}
 		}
-		service {
-			name = "{{job_name}}"
-			tags = ["metrics"]		
-		}
-	  	}
 	}
 }
