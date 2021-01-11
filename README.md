@@ -1,110 +1,145 @@
-# Nomad consul
-
-The aim of this project is to provide a development environment based on consul and nomad to manage container based microservices.
-
-The following steps should make that clear;
-
-bring up the environment by using vagrant which will create centos 7 virtualbox machine or lxc container.
-
-The proved working vagrant providers used on an ArchLinux system are
-
-vagrant-lxc
-vagrant-libvirt
-virtualbox
-    $ vagrant up --provider lxc
-    OR
-    $ vagrant up --provider libvirt
-    OR
-    $ vagrant up --provider virtualbox
-Once it is finished, you should be able to connect to the vagrant environment through SSH and interact with Nomad:
-
-    $ vagrant ssh
-    [vagrant@nomad ~]$
-    
-# Opdracht 2 Documentatie ---> Team 16 
+# Opdracht 3 Documentatie ---> Team 16 
 ## Opgave:
 
-Per 2 (overzicht), met behulp van vagrant de nomad cluster uit de eerste opdracht nu niet met bash maar met ansible of puppet op brengen. Maak hiervoor gebruik van de puppet of ansible provisioner.
+Per 2 ( overzicht), met behulp van vagrant de nomad cluster uit de tweede opdracht monitoring opzetten op basis van metrics (prometheus, alertmanager, grafana)
+Deze dienen allen als container te worden gestart op de nomad cluster. Ook de node-exporter dient als container te worden opgespint op ALLE nodes.
 
-Er dienen voor deze opdracht verschillende modules geschreven te worden als ook roles (en profiles) samen met een node manifest of play. Het gebruik van parameters en templates voor de configuraties waar nodig wordt ten zeerste aangeraden!
+De setup dient te worden geconfigureerd zodanig je nomad/consul cluster gemonitord wordt alsook een extra zelf uit te kiezen applicatie (ook een nomad job waarvan je de metrics binnenhaalt)
 
-Verdeel het werk onderling, zodanig ieder zelf code schrijft en dit ook duidelijk wordt uit de git history.
+De prometheus en alertmanager targets liefst dynamisch geconfigureerd zoals geillustreerd tijdens de les. Dashboards dienen te worden voorzien via grafana, de json export plaats je in je git repository zodanig ze kunnen worden geimporteerd tijdens de evaluatie.
 
-Nomad en consul te werken zoals beoogd in de eerste opdracht! Er zal ook deze keer gekeken worden met behulp van een nomad job file of de cluster werkt zoals vooropgesteld.
+Er dient van deze jobs niets automatisch te worden opgezet via vagrant up (mag wel) de nomad jobs dienen wel aanwezig te zijn in de git repository!
+
+Tijdens het evaluatie moment dient er een vagrant destroy vagrant up te gebeuren waarna jullie stap voor de stap door de monitoring jobs lopen, manueel starten, eventuele grafana configuratie toepassen en de dashboards inladen.
+
 
 ## Plan van aanpak: 
+Bij deze opdracht maken we gebruik van 3 vm's, namelijk:
 
-Bij de start van deze opdracht hebben we de hele mappenstructuur overgenomen van ansible. 
-Voor te beginnen hebben we een aantal service roles aangemaakt voor nomad, consul en docker. Deze service roles hebben we dezelfde structuur gegeven op basis van de service crond. Wanneer dit allemaal was uitgevoerd hadden we de default set-up voor ons en konden we beginnen met aanpassingen te doen aan alle bestanden. Hieronder ziet u een foto van onze mappenstructuur:
+* Server
+* Client1
+* Client2
 
-![Image of Files](https://github.com/roelpxl/PXL_nomad/blob/team16/images/GitFilesTree.png)
+```bash
+$ vagrant up --provision virtualbox
 
-Opdracht 2 zit volledig in de map ansible.
-Binnen de map ansible hebben we onze Vagrantfile en een map genaamd ansible.
-Binnen deze map ansible hebben we 2 folders plays en roles.
-We hebben besloten onze group_vars en host_vars folders onder de plays te zetten.
-De rest van de structuur is overgenomen van de https://github.com/visibilityspots/PXL_nomad repo.
-Wij hebben hier natuurlijk de crond folder verander door de consul, docker en nomad folder.
+```
+Het bovenstaande commando zorgt ervoor, dat alle vm's worden opgestart die in de vagrantfile worden besproken met als provider Virtualbox.
+Weergave van de vagrant file:
+```bash
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-Wij hebben het werk wat verdeeld onderling: Roel heeft de service roles docker en consul voor zijn rekening gehouden en Kobe heeft de service role nomad opgemaakt. We hebben voor elke service role defaults, tasks, templates en handlers geschreven. Hierna hebben onze vagrantfile gemodificeerd, waar we 2 client nodes (+ server node deze staat ook als client) en 1 server node opzetten. Zo konden we service roles controleren en hierop foutcontrole doen: door vagrant up te doen en te kijken als er eventueel fouten optreden bij het doorlopen van de verschillende stappen. 
+# config.vbguest.auto_update = false
 
-### Roel:
-Ik ben begonnen met het werken aan de docker file. Ik wist dat we docker-ce moesten installeren en ik heb meteen gezocht naar een download link hiervan.
-Deze was niet al te moeilijk te vinden. Vervolgens heb ik tutorials opgezocht om docker-ce te downloaden binnen ansible.
-Hier ben ik door veel verschillende tutorials gegaan tot ik uiteindelijk een werkend eind resultaat had.
-Voor docker maak ik alleen gebruik van de tasks en handlers.
-Binnen de tasks voorzie ik de juiste download link voor centos en vervolgens laat ik de handler starten.
-De handler zet na de installatie de docker service aan.
+  config.vm.provider :virtualbox do |virtualbox, override|
+    virtualbox.customize ["modifyvm", :id, "--memory", 2048]
+  end
 
-Vervolgens ben ik begonnen aan de consul installatie. Hier heb ik eerst hetzelfde gedaan als voor docker zodat de installatie van consul inorde was.
-Na de installatie ben ik begonnen met op zoek te gaan hoe je files kunt overschrijven. Zie bijlage voor handler.
-Deze heb ik volledig uitgeschreven en uiteindelijk hebben we dit niet gebruikt.
-We zijn moeten overschakelen naar het gebruiken van templates.
-Voordat we zijn overgeschakeld hebben we ook gezien: welke variabeles we nodig hebben voor de nomad- en consul configuratie in te stellen.
-Zo hebben we voor beide het huidige ip-adres en het server ip-adres nodig.
-Na verder na te denken moesten we weten of het een server configuratie is of een client configuratie.
-Ik had ook het bootstrap aantal binnen meegenomen (dit is uiteindelijk niet meer nodig).
-Dit staat allemaal in de group_vars. Omdat de node_name uniek is per client/server hebben we deze binnen host_vars mee gegeven.
+  config.vm.define "server" do |server|
+    server.vm.box = "centos/7"
+    server.vm.hostname = "server"
+	  server.vm.network "private_network", ip: "192.168.3.4", virtualbox_internet: "mynetwork"
+	  server.vm.network "forwarded_port", guest: 4646, host: 4646, auto_correct: true, host_ip: "127.0.0.1"
+	  server.vm.network "forwarded_port", guest: 8500, host: 8500, auto_correct: true, host_ip: "127.0.0.1"
+    server.vm.network "forwarded_port", guest: 9090, host: 9090, auto_correct: true, host_ip: "127.0.0.1"
 
-### Kobe:
-Ik ben begonnen met het werken aan de nomad installatie file. Mijn eerste stap was sowieso download van de hashicorp repo waar alle nodige installatiebestanden van nomad in staan, ook heb ik epel-release geïnstalleerd(wat uiteindelijk onnodig was). Wanneer ik de repo binnen had gehaald, kon ik eindelijk nomad fatsoenlijk installeren. Deze installatie stappen heb ik doorlopen in de Tasks dir van nomad, hier plaats ik ook de geconfigureerde nomad template in de dir /etc/nomad.d en herstart ik de nomad service. Ik was eerst begonnen met een template(nomad.hcl.j2) te maken, waar ik enkele fouten in had gemaakt. Daardoor waren Roel en ik overgesprongen op het gebruiken van handlers. Maar uiteindelijk was een template gebruiken de betere optie(wij gebruiken deze nu). Nu gebruiken we de handler alleen voor het herstarten van de service nomad. In de template configureer ik de server en de client, hier definieer ik ook het bind adres en de data_dir. 
+    server.vm.provision "ansible_local" do |ansible|
+      ansible.config_file = "ansible/ansible.cfg"
+      ansible.playbook = "ansible/plays/server.yml"
+      ansible.groups = {
+        "servers" => ["server"],
+      }
+	  ansible.host_vars = {}
+    end
+  end
 
-## Resultaat
+  config.vm.define "client1" do |client1|
+    client1.vm.box = "centos/7"
+    client1.vm.hostname = "client1"
+	  client1.vm.network "private_network", ip: "192.168.3.5", virtualbox_internet: "mynetwork"
+    
+    client1.vm.provision "ansible_local" do |ansible|
+      ansible.config_file = "ansible/ansible.cfg"
+      ansible.playbook = "ansible/plays/client.yml"
+      ansible.groups = {
+        "clients" => ["client1"],
+      }
+	  ansible.host_vars = {}
+    end
+  end
 
-![Image of Clients](https://github.com/roelpxl/PXL_nomad/blob/team16/images/Nomad_GUI.PNG)
+  config.vm.define "client2" do |client2|
+    client2.vm.box = "centos/7"
+    client2.vm.hostname = "client2"
+    client2.vm.network "private_network", ip: "192.168.3.6", virtualbox_internet: "mynetwork"
+    
+    client2.vm.provision "ansible_local" do |ansible|
+      ansible.config_file = "ansible/ansible.cfg"
+      ansible.playbook = "ansible/plays/client.yml"
+      ansible.groups = {
+        "clients" => ["client2"],
+      }
+	  ansible.host_vars = {}
+    end
+  end  
+end
+``` 
+De vagrantfile overloopt de volgende instellingen:
+* Het meegeven van het type provider, waarop de verschillende vm omgevingen op zouden moeten draaien.
+* Ook het besturingssysteem wordt meegegeven en er wordt aan port forwarding gedaan (Nomad, Consul en Prometheus).
+* Elke Vm krijgt een unieke statische Ip vanuit hetzelfde ip subnet.
+* Iedere Vm runt een Ansible playbook
 
-nomad manueel een job starten
+Elke vm bevat de volgende roles:
+* Nomad
+* Consul
+* Docker
+* Node_exporter (clients)
+* Nomad_jobs (server)
 
- $ nomad job run -address=http://192.168.3.4:4646 /vagrant/webserver.hcl
- 
- ![Image of NomadJob](https://github.com/roelpxl/PXL_nomad/blob/team16/images/nomad%20job.PNG)
+Weergave playbook van de server:
+```bash
+---
+- name: playbook for server vm
+  hosts: servers
+  become: yes
 
-## Problemen: 
-### Probleem 1:
-We hebben eerst geprobeerd om dit allemaal te draaien in een ubuntu server omgeving.
-Dit werkte niet omdat deze door virtualbox werd gehost en virtualbox nesting support.
+  roles:
+    - role: software/nomad
+    - role: software/consul
+    - role: software/docker
+    - role: software/node_exporter
+    - role: software/nomad_jobs
+```
+Weergave playbook van de clients:
+```bash
+---
+- name: playbook for client vm
+  hosts: clients
+  become: yes
 
-### Oplossing:
-Roel had al gehoord van zijn groepsgenoten van het project dat het niet zo moeilijk was om Ansible in een windows/vagrant omgeving te draaien.
-Er moest gewoon ansible_local gebruikt worden.
+  roles:
+    - role: software/nomad
+    - role: software/consul
+    - role: software/docker
+    - role: software/node_exporter
+```
+De roles Nomad, Consul en Docker documentatie vindt u terug in onze vorige opdracht, deze betreffende roles halen we hier niet meer aan.
+De bijkomende roles bij deze opdracht zijn:
 
-### Probleem 2:
-We hebben veel problemen ondervonden bij het editeren van de config-files van zowel consul, als nomad.
-We hadden allebei een andere oplossing zitten uit te proberen, maar we zijn beide vastgelopen bij onze eigen oplossing.
-Roel heeft eerst gebruik gemaakt van handlers, die de file moesten editeren lijn per lijn.
-Kobe heeft geprobeerd een template te gebruiken, die de bestaande file moest vervangen.
+###Node_exporter
+####Tasks
 
-### Probleem 3:
-Beide zijn fout gelopen, maar de handlers leken het meest belovend.
-Bij het uitvoeren van de handlers leek het op dat de group_vars en hosts_vars niet gevonden werden.
 
-### Oplossing 3:
-Het verplaatsen van de group_vars en hosts_vars naar de roles dir zorgde ervoor dat deze wel gevonden werden.
-Dit was een juiste, maar overbodige oplossing door het verkeerd op te nemen van: https://stackoverflow.com/questions/43162620/host-vars-and-group-vars-are-not-getting-loaded
 
-### Oplossing 2:
-Na het grondig testen van de handlers, lijken hier af en toe toch nog problemen mee te zijn.
-Het overstappen naar een template was de oplossing.
+
+
+
+
+
 
 ## Bijlagen:
 
