@@ -6,36 +6,22 @@
     dest: /opt/fabio.nomad
   notify: Start fabio
 
-- name: Create a directory for Prometheus.yml
-  file:
-    path: /opt/prometheus
-    state: directory
-    mode: '0755'
+- name: Alertmanager job
+  template:
+    src: alertmanager.nomad
+    dest: /opt/alertmanager.nomad
+  notify: Start alertmanager
 
-- name: Create a directory for alertmanager rules
-  file:
-    path: /opt/alertmanager
-    state: directory
-    mode: '0755'
+- name: webserver job
+  template:
+    src: webserver.nomad
+    dest: /opt/webserver.nomad
+  notify: Start webserver
 
-- name: alertmanager infrastructure rules template
-  template: 
-    src: infrastructure.hcl.sh.j2
-    dest: /opt/alertmanager/infrastructure.rules
-
-- name: Prometheus.yml template
-  template: 
-    src: prometheus.yml.sh.j2
-    dest: /opt/prometheus/prometheus.yml
-
-- name: Prometheus template
-  template: 
-    src: jobs.hcl.sh.j2
-    dest: /opt/nomad/prometheus.hcl
-  vars:
-    job_name: prometheus
-    job_image: prom/prometheus:latest
-    job_port: 9090
+- name: prometheus job
+  template:
+    src: prometheus.nomad
+    dest: /opt/prometheus.nomad
   notify: Start prometheus
 
 - name: Grafana template
@@ -47,25 +33,3 @@
     job_image: grafana/grafana:latest
     job_port: 3000
   notify: Start grafana
-
-- name: Alertmanager template
-  template: 
-    src: jobs.hcl.sh.j2
-    dest: /opt/nomad/alertmanager.hcl
-  vars:
-    job_name: alertmanager
-    job_image: prom/alertmanager:latest
-    job_port: 9093
-  notify: Start alertmanager
-
-- name: webserver template
-  template: 
-    src: webserver.hcl.sh.j2
-    dest: /opt/nomad/webserver.hcl
-  notify: Start webserver
-
-- name: webserver template
-  template: 
-    src: rules.yml.sh.j2
-    dest: /opt/prometheus/rules.yml
-  notify: Start webserver

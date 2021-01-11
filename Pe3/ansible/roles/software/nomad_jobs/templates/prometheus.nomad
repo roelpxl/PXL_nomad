@@ -1,17 +1,15 @@
 job "prometheus" {
   datacenters = ["dc1"]
-  type        = "service"
+  type = "service"
 
   group "monitoring" {
     count = 1
-
     restart {
       attempts = 2
       interval = "30m"
-      delay    = "15s"
-      mode     = "fail"
+      delay = "15s"
+      mode = "fail"
     }
-
     ephemeral_disk {
       size = 300
     }
@@ -19,15 +17,47 @@ job "prometheus" {
     task "prometheus" {
       template {
         change_mode = "noop"
-        destination = "local/prometheus.yml"
+        destination = "local/webserver_alert.yml"
+        data = <<EOH
+---
+groups:
+- name: prometheus_alerts
+  rules:
+  - alert: Webserver down
+    expr: absent(up{job="webserver"})
+    for: 10s
+    labels:
+      severity: critical
+    annotations:
+      description: "Our webserver is down."
+EOH
+      }
 
+      template {
+        change_mode = "noop"
+        destination = "local/prometheus.yml"
         data = <<EOH
 ---
 global:
   scrape_interval:     5s
   evaluation_interval: 5s
 
+alerting:
+  alertmanagers:
+  - consul_sd_configs:
+    - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
+      services: ['alertmanager']
+
+rule_files:
+  - "webserver_alert.yml"
+
 scrape_configs:
+
+  - job_name: 'alertmanager'
+
+    consul_sd_configs:
+    - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
+      services: ['alertmanager']
 
   - job_name: 'nomad_metrics'
 
@@ -44,35 +74,63 @@ scrape_configs:
     metrics_path: /v1/metrics
     params:
       format: ['prometheus']
+
+  - job_name: 'selenium-grid-monitoring'
+
+  honor_labels: true
+  metrics_path: '/federate'
+
+  params:
+      'match[]':
+      - '{job="seleniumGrid"}'
+
+  consul_sd_configs:
+  - server:   'localhost:8500'
+      services:
+      ["selenium-hub"]
+
+  relabel_configs:
+  - source_labels: ['__meta_consul_address']
+      separator: ';'
+      target_label:  '__address__'
+      replacement: '${1}:9090'
+      action: 'replace'
+
+  - job_name: 'prometheus'
+
+  static_configs:
+    - targets: ['localhost:9090']
+
+  - job_name: 'webserver'
+
+    consul_sd_configs:
+    - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
+      services: ['webserver']
+
+    metrics_path: /metrics
 EOH
       }
-
       driver = "docker"
-
       config {
         image = "prom/prometheus:latest"
-
         volumes = [
-          "local/prometheus.yml:/etc/prometheus/prometheus.yml",
+          "local/webserver_alert.yml:/etc/prometheus/webserver_alert.yml",
+          "local/prometheus.yml:/etc/prometheus/prometheus.yml"
         ]
-
         port_map {
           prometheus_ui = 9090
         }
       }
-
       resources {
         network {
           mbits = 10
-          port  "prometheus_ui"{}
+          port "prometheus_ui" {}
         }
       }
-
       service {
         name = "prometheus"
         tags = ["urlprefix-/"]
         port = "prometheus_ui"
-
         check {
           name     = "prometheus_ui port alive"
           type     = "http"
@@ -84,4 +142,3 @@ EOH
     }
   }
 }
-
