@@ -1,4 +1,7 @@
 ---
+- name: Start fabio
+  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/fabio.nomad || exit 0
+
 - name: Start prometheus
   shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/prometheus.hcl || exit 0
 

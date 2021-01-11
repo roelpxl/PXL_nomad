@@ -1,4 +1,11 @@
 ---
+
+- name: fabio job
+  template:
+    src: fabio.nomad
+    dest: /opt/fabio.nomad
+  notify: Start fabio
+
 - name: Create a directory for Prometheus.yml
   file:
     path: /opt/prometheus
