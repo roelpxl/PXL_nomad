@@ -75,31 +75,7 @@ scrape_configs:
     params:
       format: ['prometheus']
 
-  - job_name: 'selenium-grid-monitoring'
-
-  honor_labels: true
-  metrics_path: '/federate'
-
-  params:
-      'match[]':
-      - '{job="seleniumGrid"}'
-
-  consul_sd_configs:
-  - server:   'localhost:8500'
-      services:
-      ["selenium-hub"]
-
-  relabel_configs:
-  - source_labels: ['__meta_consul_address']
-      separator: ';'
-      target_label:  '__address__'
-      replacement: '${1}:9090'
-      action: 'replace'
-
-  - job_name: 'prometheus'
-
-  static_configs:
-    - targets: ['localhost:9090']
+  
 
   - job_name: 'webserver'
 
