@@ -41,19 +41,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	  ansible.host_vars = {}
     end
   end
-
-  config.vm.define "client2" do |client2|
-    client2.vm.box = "centos/7"
-    client2.vm.hostname = "client2"
-    client2.vm.network "private_network", ip: "192.168.3.6", virtualbox_internet: "mynetwork"
-    
-    client2.vm.provision "ansible_local" do |ansible|
-      ansible.config_file = "ansible/ansible.cfg"
-      ansible.playbook = "ansible/plays/client.yml"
-      ansible.groups = {
-        "clients" => ["client2"],
-      }
-	  ansible.host_vars = {}
-    end
-  end  
 end

@@ -18,11 +18,9 @@ Bij deze opdracht maken we gebruik van 3 vm's, namelijk:
 
 * Server
 * Client1
-* Client2
 
 ```bash
 $ vagrant up --provision virtualbox
-
 ```
 Het bovenstaande commando zorgt ervoor, dat alle vm's worden opgestart die in de vagrantfile worden besproken met als provider Virtualbox.
 Weergave van de vagrant file:
@@ -130,20 +128,338 @@ Weergave playbook van de clients:
 De roles Nomad, Consul en Docker documentatie vindt u terug in onze vorige opdracht, deze betreffende roles halen we hier niet meer aan.
 De bijkomende roles bij deze opdracht zijn:
 
-###Node_exporter
-####Tasks
+### Node_exporter
+#### Node_Exporter Handlers
+```bash
+---
+- name: Started Node_exporter
+  service:
+    name: node_exporter
+    state: started
+```
+#### Node_Exporter Tasks
+```bash
+---
+- name: Download node_exporter
+  get_url:
+    url: https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz
+    dest: /home/vagrant
+    mode: '0776'
+    
 
+- name: Extract node_exporter
+  unarchive:
+    src: /home/vagrant/node_exporter-1.0.1.linux-amd64.tar.gz
+    dest: /home/vagrant
 
+- name: Move node_exporter
+  command: mv /home/vagrant/node_exporter-1.0.1.linux-amd64/node_exporter /usr/local/bin/
 
+- name: Node_exporter .service file
+  template: 
+    src: node_exporter.service.sh.j2
+    dest: /etc/systemd/system/node_exporter.service
 
+- name: Start node_exporter
+  service:
+    name: node_exporter
+    state: started
+```
+#### Node_Exporter templates
+```bash
+[Unit]
+Description=Node Exporter
+After=network.target
+ 
+[Service]
+User=vagrant
+Group=vagrant
+Type=simple
+ExecStart=/usr/local/bin/node_exporter
+ 
+[Install]
+WantedBy=multi-user.target
+```
+### Nomad_jobs
+#### Nomad_jobs handlers
+```bash
+---
+- name: Start prometheus
+  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/prometheus.hcl || exit 0
 
+- name: Start grafana
+  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/grafana.hcl || exit 0
 
+- name: Start alertmanager
+  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/alertmanager.hcl || exit 0
 
+- name: Start webserver
+  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/webserver.hcl || exit 0
+```
+#### Nomad_jobs tasks
+```bash
+---
+- name: Create a directory for Prometheus.yml
+  file:
+    path: /opt/prometheus
+    state: directory
+    mode: '0755'
 
+- name: Create a directory for alertmanager rules
+  file:
+    path: /opt/alertmanager
+    state: directory
+    mode: '0755'
 
-## Bijlagen:
+- name: alertmanager infrastructure rules template
+  template: 
+    src: infrastructure.hcl.sh.j2
+    dest: /opt/alertmanager/infrastructure.rules
 
-Voor handler: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/lineinfile_module.html
+- name: Prometheus.yml template
+  template: 
+    src: prometheus.yml.sh.j2
+    dest: /opt/prometheus/prometheus.yml
 
-Voor template:
-https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html
+- name: Prometheus template
+  template: 
+    src: jobs.hcl.sh.j2
+    dest: /opt/nomad/prometheus.hcl
+  vars:
+    job_name: prometheus
+    job_image: prom/prometheus:latest
+    job_port: 9090
+  notify: Start prometheus
+
+- name: Grafana template
+  template: 
+    src: jobs.hcl.sh.j2
+    dest: /opt/nomad/grafana.hcl
+  vars:
+    job_name: grafana
+    job_image: grafana/grafana:latest
+    job_port: 3000
+  notify: Start grafana
+
+- name: Alertmanager template
+  template: 
+    src: jobs.hcl.sh.j2
+    dest: /opt/nomad/alertmanager.hcl
+  vars:
+    job_name: alertmanager
+    job_image: prom/alertmanager:latest
+    job_port: 9093
+  notify: Start alertmanager
+
+- name: webserver template
+  template: 
+    src: webserver.hcl.sh.j2
+    dest: /opt/nomad/webserver.hcl
+  notify: Start webserver
+
+- name: webserver template
+  template: 
+    src: rules.yml.sh.j2
+    dest: /opt/prometheus/rules.yml
+  notify: Start webserver
+```
+#### Nomad_jobes templates (default template)
+```bash
+job "{{job_name}}" {
+	datacenters = ["dc1"] 
+	type = "service"
+
+	group "{{job_name}}" {
+		count = 1
+		network {
+			port "{{job_name}}_port" {
+			to = {{job_port}}
+			static = {{job_port}}
+			}
+		}
+		task "{{job_name}}" {
+			driver = "docker"
+			config {
+				image = "{{job_image}}"
+				ports = ["{{job_name}}_port"]
+				logging {
+					type = "journald"
+					config {
+						tag = "{{job_name}}"
+					}
+				}
+			
+			}
+			service {
+				name = "{{job_name}}"
+				tags = ["metrics"]		
+			}
+		}
+	}
+}
+```
+#### Nomad_jobes templates (Prometheus.hcl)
+```bash
+job "{{job_name}}" {
+	datacenters = ["dc1"] 
+	type = "service"
+
+	group "{{job_name}}" {
+		count = 1
+		network {
+			port "{{job_name}}_port" {
+			to = {{job_port}}
+			static = {{job_port}}
+			}
+		}
+	  task "{{job_name}}" {
+		driver = "docker"
+		config {
+			image = "{{job_image}}"
+			ports = ["{{job_name}}_port"]
+			logging {
+				type = "journald"
+				config {
+					tag = "{{job_name}}"
+				}
+			}
+        volumes = [
+          "/opt/prometheus/:/etc/prometheus/"
+        ]
+        args = [
+          "--config.file=/etc/prometheus/prometheus.yml",
+          "--storage.tsdb.path=/prometheus",
+	  "--web.enable-lifecycle",
+          "--web.console.libraries=/usr/share/prometheus/console_libraries",
+          "--web.console.templates=/usr/share/prometheus/consoles",
+          "--web.enable-admin-api"
+        ]
+		}
+		service {
+			name = "{{job_name}}"
+		}
+	  }
+	}
+}
+```
+#### Nomad_jobes templates (Prometheus.yml)
+```bash
+global:                                       
+  scrape_interval:     5s                     
+  evaluation_interval: 5s                     
+
+alerting:
+  alertmanagers:
+    - consul_sd_configs:
+      - server: '192.168.3.4:8500'
+        services: ['alertmanager']
+    - relabel_configs: 
+        - source_labels: [__address__]          
+          action: replace                       
+          regex: ([^:]+):.*                     
+          replacement: $1:9093              
+          target_label: __address__
+
+rule_files:
+ - rules.yml
+
+scrape_configs:                               
+                                              
+  - job_name: 'nomad_metrics'                 
+                                              
+    consul_sd_configs:                        
+    - server: '192.168.3.4:8500'             
+      services: ['nomad-client', 'nomad']     
+                                              
+    relabel_configs:                          
+    - source_labels: ['__meta_consul_tags']   
+      regex: '(.*)http(.*)'                   
+      action: keep                            
+                                              
+    scrape_interval: 5s                       
+    metrics_path: /v1/metrics                 
+    params:                                   
+      format: ['prometheus']                  
+  - job_name: 'node_exporter'                 
+    consul_sd_configs:                        
+      - server: '192.168.3.4:8500'           
+        services: ['nomad-client']            
+    relabel_configs:                          
+      - source_labels: [__meta_consul_tags]   
+        regex: '(.*)http(.*)'                 
+        action: keep                          
+      - source_labels: [__meta_consul_service]
+        target_label: job                     
+      - source_labels: [__address__]          
+        action: replace                       
+        regex: ([^:]+):.*                     
+        replacement: $1:9100                  
+        target_label: __address__  
+        
+  - job_name: 'webserver'
+    consul_sd_configs:
+    - server: '192.168.3.4:8500'
+      services: ['webserver']
+    metrics_path: /metrics
+  
+  - job_name: 'alertmanager'
+    consul_sd_configs:
+      - server: '192.168.3.4:8500'
+        services: ['alertmanager']
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        target_label: job
+      - source_labels: [__address__]          
+        action: replace                       
+        regex: ([^:]+):.*                     
+        replacement: $1:9093              
+        target_label: __address__
+
+    scrape_interval: 5s
+    metrics_path: /metrics
+    params:
+      format: ['prometheus']
+```
+#### Nomad_jobs templates (Webserver.hcl (Extra applicatie/server job))
+```bash
+job "webserver" {
+  datacenters = ["dc1"]
+
+  group "webserver" {
+    task "server" {
+      driver = "docker"
+      config {
+        image = "hashicorp/demo-prometheus-instrumentation:latest"
+      }
+
+      resources {
+        cpu = 500
+        memory = 256
+        network {
+          mbits = 10
+          port  "http"{}
+        }
+      }
+
+      service {
+        name = "webserver"
+        port = "http"
+
+        tags = [
+          "testweb",
+          "urlprefix-/webserver strip=/webserver",
+        ]
+
+        check {
+          type     = "http"
+          path     = "/"
+          interval = "2s"
+          timeout  = "2s"
+        }
+      }
+    }
+  }
+}
+```
+## Teamwork
+We hebben samen deze opdracht tot stand gebracht en evenveel werk geleverd.
