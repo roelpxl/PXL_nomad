@@ -75,8 +75,6 @@ scrape_configs:
     params:
       format: ['prometheus']
 
-  
-
   - job_name: 'webserver'
 
     consul_sd_configs:
@@ -118,3 +116,4 @@ EOH
     }
   }
 }
+

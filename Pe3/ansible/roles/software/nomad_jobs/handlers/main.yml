@@ -2,14 +2,14 @@
 - name: Start fabio
   shell: nomad job run -address=http://{{server_ip}}:4646 /opt/fabio.nomad || exit 0
 
-- name: Start prometheus
-  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/prometheus.hcl || exit 0
-
-- name: Start grafana
-  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/grafana.hcl || exit 0
-
 - name: Start alertmanager
-  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/alertmanager.hcl || exit 0
+  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/alertmanager.nomad || exit 0
 
 - name: Start webserver
-  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/webserver.hcl || exit 0
+  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/webserver.nomad || exit 0
+
+- name: Start prometheus
+  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/prometheus.nomad || exit 0
+
+- name: Start grafana
+  shell: nomad job run -address=http://{{server_ip}}:4646 /opt/nomad/grafana.nomad || exit 0
