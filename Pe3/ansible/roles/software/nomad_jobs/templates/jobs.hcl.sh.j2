@@ -22,30 +22,11 @@ job "{{job_name}}" {
 				}
 			}
 		
-{% if {{job_name}} == 'prometheus' %}
-		volumes = [
-          "/opt/prometheus/:/etc/prometheus/"
-        ]
-        args = [
-          "--config.file=/etc/prometheus/prometheus.yml",
-          "--storage.tsdb.path=/prometheus",
-          "--web.console.libraries=/usr/share/prometheus/console_libraries",
-          "--web.console.templates=/usr/share/prometheus/consoles",
-          "--web.enable-admin-api"
-        ]
-		}
-		service {
-			name = "{{job_name}}"			
-		}
-
-{% else %}
 		}
 		service {
 			name = "{{job_name}}"
 			tags = ["metrics"]		
 		}
-
-{% endif %}
 	  	}
 	}
 }
