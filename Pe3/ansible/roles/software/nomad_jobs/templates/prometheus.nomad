@@ -54,10 +54,19 @@ rule_files:
 scrape_configs:
 
   - job_name: 'alertmanager'
-
     consul_sd_configs:
     - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
       services: ['alertmanager']
+
+ 
+  - job_name: 'prometheus'
+    consul_sd_configs:
+    - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
+      services: ['prometheus']
+
+  - job_name: 'node
+    static_configs:
+    -targets: ['192.168.3.4:9100']
 
   - job_name: 'nomad_metrics'
 
